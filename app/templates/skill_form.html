@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4 p-md-5">
+                <div class="mb-4">
+
+                    <h2 class="fw-bold">{{ title if skill else 'Add New Skill Category'}}</h2>
+                    <p class="text-muted">Manage your expertise dynamically on the landing page.</p>
+                </div>
+
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Category Name</label>
+                            <input type="text" name="category" class="form-control bg-light border-0" 
+                                   value="{{ skill.category if skill else '' }}" placeholder="e.g. Backend Development" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Short Description</label>
+                            <input type="text" name="description" class="form-control bg-light border-0" 
+                                    value="{{ skill.description if skill else '' }}" placeholder="e.g. Architecting secure APIs and logic...">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Tools (Comma Separated)</label>
+                            <input type="text" name="tools" class="form-control bg-light border-0" 
+                                   value="{{ skill.tools if skill else '' }}" placeholder="Python, Flask, PostgreSQL">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Icon Class (Bootstrap Icons)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0">bi-</span>
+                                <input type="text" name="icon_class" class="form-control bg-light border-0" 
+                                       value="{{ skill.icon_class if skill else '' }}" placeholder="code-slash">
+                            </div>
+                            <div class="form-text small">Find icons at <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary w-100 shadow-sm">{{ 'Update Skill' if skill else 'Add to Toolbox' }}</button>
+                            <a href="{{ url_for('main.home') }}" class="btn btn-link w-100 text-muted mt-2">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

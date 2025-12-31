@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                <div class="row g-0">
+                    <div class="col-md-5 bg-dark text-white p-5 d-flex flex-column justify-content-between">
+                        <div>
+                            <h2 class="fw-bold mb-4">Let's Connect</h2>
+                            <p class="mb-5 opacity-75">I’m interested in junior entry roles and internship opportunities. Feel free to reach out!
+                                <br>Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                            </p>
+
+                            
+                            <div class="mb-4 d-flex align-items-center">
+                                <div class="btn btn-outline-primary btn-sm rounded-circle me-3"><i class="bi bi-geo-alt"></i></div>
+                                <span>Lagos, Nigeria (Open to Remote)</span>
+                            </div>
+                            <div class="mb-4 d-flex align-items-center">
+                                <div class="btn btn-outline-primary btn-sm rounded-circle me-3"><i class="bi bi-envelope"></i></div>
+                                <span>abdulakeem606@gmail.com</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="text-uppercase tracking-widest small mb-3">Follow Me</h6>
+                            <div class="d-flex gap-3">
+                                <a href="https://github.com/aramydcd" target="_blank" class="text-white fs-4"><i class="bi bi-github"></i></a>
+                                <a href="https://linkedin.com/in/yourusername" target="_blank" class="text-white fs-4"><i class="bi bi-linkedin"></i></a>
+                                <a href="https://x.com/bhadboi4melody" target="_blank" class="text-white fs-4"><i class="bi bi-twitter-x"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7 bg-white p-5">
+                        <form method="POST">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold">Full Name</label>
+                                    <input type="text" name="name" class="form-control bg-light border-0" placeholder="John Doe" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold">Email Address</label>
+                                    <input type="email" name="email" class="form-control bg-light border-0" placeholder="john@example.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold">Subject</label>
+                                    <input type="text" name="subject" class="form-control bg-light border-0" placeholder="Job Opportunity" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold">Message</label>
+                                    <textarea name="message" rows="5" class="form-control bg-light border-0" placeholder="How can I help you?" required></textarea>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

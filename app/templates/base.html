@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Portfolio | CS Graduate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('main.home') }}">ABDULAZEEZ ABDULAKEEM</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto align-items-center">
+                    <a class="nav-link {{ 'active' if request.endpoint == 'main.home' }}" 
+                    href="{{ url_for('main.home') }}">Home</a>
+                    
+                    {% if current_user.is_authenticated %}
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.inbox' }}" href="{{ url_for('main.inbox') }}">Inbox</a>
+                        
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.manage_experience' }}" 
+                        href="{{ url_for('main.manage_experience') }}">Experience</a>
+
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.projects' }}" 
+                        href="{{ url_for('main.projects') }}">Projects</a>
+                        
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.manage_skills' }}" 
+                        href="{{ url_for('main.manage_skills') }}">Skills</a>
+                        
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+
+                    {%else%}
+                        <a class="nav-link {{ 'active' if request.endpoint == 'main.projects' }}" 
+                        href="{{ url_for('main.projects') }}">Projects</a>
+                    {% endif %}
+
+                    <a class="nav-link btn btn-outline-primary ms-lg-3 px-4 text-white {{ 'active' if request.endpoint == 'main.contact' }}" 
+                    href="{{ url_for('main.contact') }}">Contact Me</a>
+                </div>
+            </div>
+        </div>
+</nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row gx-5">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4 class="fw-bold text-primary mb-3">ABDULAZEEZ ABDULAKEEM</h4>
+                    <p class="text-secondary">
+                        A passionate Software Engineer dedicated to building clean, scalable, and user-centric applications. Let's build something amazing together.
+                    </p>
+                    
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="https://github.com/aramydcd" class="text-secondary fs-4 hover-primary"><i class="bi bi-github"></i></a>
+                        <a href="https://linkedin.com/in/yourusername" class="text-secondary fs-4 hover-primary"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://x.com/bhadboi4melody" class="text-secondary fs-4 hover-primary"><i class="bi bi-twitter-x"></i></a>
+        
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="text-uppercase fw-bold mb-3">Navigation</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{{ url_for('main.home') }}" class="text-secondary text-decoration-none hover-white">Home</a></li>
+                        <li class="mb-2"><a href="{{ url_for('main.projects') }}" class="text-secondary text-decoration-none hover-white">Projects</a></li>
+                        <li class="mb-2"><a href="{{ url_for('main.contact') }}" class="text-secondary text-decoration-none hover-white">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="text-uppercase fw-bold mb-3">Core Expertise</h6>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Backend Development</li>
+                        <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> API Design & Integration</li>
+                        <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Database Management</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-4">
+                    <h6 class="text-uppercase fw-bold mb-3">Get In Touch</h6>
+                    <div class="col-md-3 mb-4 mb-lg-0">
+               
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <a href="mailto:abdulakeem606@gmail.com" class="text-secondary text-decoration-none d-flex align-items-center hover-white transition-all">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                                        <i class="bi bi-envelope-at-fill text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <span class="d-block text-white small fw-bold">Email Me</span>
+                                        <span class="small">abdulakeem606@gmail.com</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+    
+                    <p class="text-secondary"><i class="bi bi-geo-alt-fill me-2 text-primary"></i> Lagos, Nigeria</p>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-sm mt-2 px-4">Work With Me</a>
+                </div>
+            </div>
+
+            <hr class="my-5 border-secondary opacity-25">
+
+            <div class="row align-items-center py-2">
+                <div class="col-md-4 text-center text-md-start">
+                    <p class="small text-secondary mb-0">&copy; 2025 Abdulazeez Abdulakeem. All rights reserved.</p>
+                </div>
+                
+                <div class="col-md-4 text-center my-3 my-md-0">
+                    <div class="d-inline-flex align-items-center bg-secondary bg-opacity-10 px-3 py-1 rounded-pill">
+                        <span class="d-inline-block bg-success rounded-circle me-2 animate-pulse" style="width: 8px; height: 8px;"></span>
+                        <span class="text-secondary small" style="font-size: 0.7rem;">
+                            LAST UPDATED: <span class="text-white fw-bold">{{ last_updated }}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-center text-md-end">
+                    <p class="small text-secondary mb-0">
+                        Built with <i class="bi bi-heart-fill text-danger small"></i> using <span class="text-white">Python & Flask</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

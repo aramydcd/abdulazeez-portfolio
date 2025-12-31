@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow p-4">
+                <h3 class="fw-bold mb-4">{{ title }}</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Role Title</label>
+                        <input type="text" name="title" class="form-control" value="{{ role.title if role else '' }}" placeholder="e.g. Junior Backend Developer" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Bootstrap Icon Class</label>
+                        <input type="text" name="icon_class" class="form-control" value="{{ role.icon_class if role else 'bi-cpu' }}" placeholder="bi-server, bi-database, etc.">
+                        <small class="text-muted">Find icons at <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Description</label>
+                        <textarea name="description" class="form-control" rows="3" required>{{ role.description if role else '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Role</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

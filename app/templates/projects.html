@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="text-center mb-5">
+        <h6 class="text-uppercase text-primary fw-bold tracking-widest">Portfolio</h6>
+        <h2 class="display-5 fw-bold">Featured Projects</h2>
+        <p class="text-muted mx-auto mb-4" style="max-width: 600px;">
+            A collection of technical challenges I've solved, categorized by stack.
+        </p>
+
+        {% if current_user.is_authenticated %}
+            <div class="mb-4">
+                <a href="{{ url_for('main.new_project') }}" class="btn btn-primary shadow-sm px-4">
+                    <i class="bi bi-plus-lg me-2"></i>Add New Project
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12 d-flex justify-content-center flex-wrap gap-2">
+            <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="all">All</button>
+            <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="Python">Python</button>
+            <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="Flask">Flask</button>
+            <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="VB.NET">VB.NET</button>
+            <button class="btn btn-outline-primary rounded-pill px-4 filter-btn" data-filter="SQL">SQL</button>
+        </div>
+    </div>
+
+    <div class="row g-4" id="project-grid">
+        {% for project in projects %}
+        <div class="col-md-6 col-lg-4 project-item" data-tech="{{ project.technologies }}">
+            <div class="card h-100 border-0 shadow-sm project-card overflow-hidden">
+                <div class="position-relative overflow-hidden" style="height: 220px;">
+                    <img src="{{ url_for('static', filename='img/' + project.image_file) }}" 
+                         class="card-img-top h-100 w-100" 
+                         style="object-fit: cover;" 
+                         alt="{{ project.title }}">
+                    <div class="project-overlay d-flex align-items-center justify-content-center">
+                        <a href="{{ url_for('main.project_detail', project_id=project.id) }}" class="btn btn-light btn-sm px-4 fw-bold shadow-sm">Explore Project</a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="fw-bold">
+                        <a href="{{ url_for('main.project_detail', project_id=project.id) }}" class="text-decoration-none text-dark">
+                            {{ project.title }}
+                        </a>
+                    </h5>
+                    <div class="mb-2">
+                        {% for tech in project.technologies.split(',') %}
+                            <a href="{{ url_for('main.projects', category=tech.strip()) }}" 
+                               class="badge bg-light text-primary border text-decoration-none small">
+                               {{ tech.strip() }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    <p class="card-text text-secondary">{{ project.description[:120] }}...</p>
+                </div>
+
+                <div class="card-footer bg-white border-0 p-4 pt-0 d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('main.project_detail', project_id=project.id) }}" class="text-primary text-decoration-none fw-bold small">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="{{ project.github_url }}" target="_blank" class="text-dark"><i class="bi bi-github"></i></a>
+                        {% if project.live_demo_url %}
+                            <a href="{{ project.live_demo_url }}" target="_blank" class="text-primary"><i class="bi bi-link-45deg"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Capture the category from Flask (passed in the route via active_category)
+    const activeCat = "{{ active_category }}"; 
+    
+    function applyFilter(filterValue) {
+        const items = document.querySelectorAll('.project-item');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        // Update Button UI
+        buttons.forEach(btn => {
+            if (btn.getAttribute('data-filter') === filterValue) {
+                btn.classList.replace('btn-outline-primary', 'btn-primary');
+            } else {
+                btn.classList.replace('btn-primary', 'btn-outline-primary');
+            }
+        });
+
+        // Filter Grid Items
+        items.forEach(item => {
+            const techString = item.getAttribute('data-tech');
+            if (filterValue === 'all' || techString.includes(filterValue)) {
+                item.style.display = 'block';
+                item.style.animation = 'fadeIn 0.5s ease forwards';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Manual Click Event
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            applyFilter(button.getAttribute('data-filter'));
+        });
+    });
+
+    // Run on Page Load (Auto-filter)
+    applyFilter(activeCat || 'all');
+});
+</script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Hover effect for badges */
+.badge:hover {
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+}
+</style>
+{% endblock %}

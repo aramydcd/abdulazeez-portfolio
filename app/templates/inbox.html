@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Admin Inbox</h2>
+        <span class="badge bg-primary">{{ messages|length }} Messages</span>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Message Preview</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr>
+                        <td class="small text-muted">{{ msg.timestamp.strftime('%d %b, %y') }}</td>
+                        <td>
+                            <div class="fw-bold">{{ msg.name }}</div>
+                            <div class="small text-muted">{{ msg.email }}</div>
+                        </td>
+                        <td><span class="badge bg-soft-primary text-primary">{{ msg.subject }}</span></td>
+                        <td class="text-truncate" style="max-width: 250px;">{{ msg.message }}</td>
+                        <td class="text-end">
+                            <a href="mailto:{{ msg.email }}?subject=RE: {{ msg.subject }}&body=Hi {{ msg.name }},%0D%0A%0D%0A" 
+                               class="btn btn-sm btn-primary">
+                                <i class="bi bi-reply-fill"></i> Reply
+                            </a>
+                            
+                            <form action="{{ url_for('main.delete_message', message_id=msg.id) }}" method="POST" class="d-inline">
+                                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete message?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">No messages found in your inbox.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

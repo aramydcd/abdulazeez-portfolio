@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 p-md-5">
+                <div class="mb-4">
+                    <h2 class="fw-bold">{{ title }}</h2>
+                    <p class="text-muted">Fill in the details to showcase your latest technical work.</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Project Title</label>
+                            <input type="text" name="title" class="form-control bg-light border-0" 
+                                   value="{{ project.title if project else '' }}" placeholder="e.g. E-commerce API" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Featured Image</label>
+                            <input type="file" name="image" class="form-control bg-light border-0" accept="image/*">
+                            <div class="form-text mt-1 small">Recommended: 1200x800px. JPG or PNG.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Technologies Used (Comma Separated)</label>
+                            <input type="text" name="technologies" class="form-control bg-light border-0" 
+                                   value="{{ project.technologies if project else '' }}" placeholder="Python, Flask, PostgreSQL, Docker">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Detailed Description</label>
+                            <textarea name="description" class="form-control bg-light border-0" rows="6" 
+                                      placeholder="Explain the problem you solved and the technical implementation...">{{ project.description if project else '' }}</textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">GitHub Repository URL</label>
+                            <input type="url" name="github_url" class="form-control bg-light border-0" 
+                                   value="{{ project.github_url if project else '' }}" placeholder="https://github.com/aramydcd/...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Live Demo URL (Optional)</label>
+                            <input type="url" name="live_demo_url" class="form-control bg-light border-0" 
+                                   value="{{ project.live_demo_url if project else '' }}" placeholder="https://myapp.com">
+                        </div>
+
+                        <div class="col-12 mt-4 text-end">
+                            <a href="{{ url_for('main.projects') }}" class="btn btn-link text-muted text-decoration-none me-3">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">Save Project Data</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

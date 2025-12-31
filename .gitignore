@@ -1,0 +1,9 @@
+# Python-generated files
+.env
+instance/
+portfolio.db
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/

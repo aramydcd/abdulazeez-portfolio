@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4 p-md-5">
+                <h2 class="fw-bold mb-4">{{ title }}</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Job Title</label>
+                        <input type="text" name="job_title" class="form-control bg-light border-0" 
+                               placeholder="e.g. Software Developer Intern" value="{{ exp.job_title if exp else '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Company</label>
+                        <input type="text" name="company" class="form-control bg-light border-0" 
+                               placeholder="e.g. 4Real Global IT Solution" value="{{ exp.company if exp else '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Duration</label>
+                        <input type="text" name="duration" class="form-control bg-light border-0" 
+                               placeholder="e.g. Jan 2024 - April 2024" value="{{ exp.duration if exp else '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Key Responsibilities (Use bullets)</label>
+                        <textarea name="description" class="form-control bg-light border-0" rows="5" 
+                                  placeholder="• Built APIs...&#10;• Optimized database...">{{ exp.description if exp else '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 shadow-sm mt-3">Save Experience</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
