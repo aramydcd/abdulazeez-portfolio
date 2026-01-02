@@ -7,7 +7,8 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(255), default="Available for Internship")
+    profile_pic = db.Column(db.String(100), nullable=False, default='profile.jpg')
+    status = db.Column(db.String(255), default="Open to Internships & Junior Roles")
     
 
 class Project(db.Model):
@@ -47,6 +48,7 @@ class Experience(db.Model):
     job_title = db.Column(db.String(100), nullable=False) # e.g., Software Developer Intern
     company = db.Column(db.String(100), nullable=False)   # e.g., 4Real Global IT Solution
     duration = db.Column(db.String(50))                  # e.g., Jan 2024 - April 2024
+    technologies = db.Column(db.String(200))  # e.g., "Python, Flask, Postgres"
     description = db.Column(db.Text)                     # Key responsibilities/achievements
     order = db.Column(db.Integer, default=0)             # To control display sequence
     
@@ -56,7 +58,9 @@ class TargetRole(db.Model):
     title = db.Column(db.String(100), nullable=False) # e.g., Backend Developer
     icon_class = db.Column(db.String(50), default='bi-cpu') # Bootstrap icon name
     description = db.Column(db.Text, nullable=False)
+    cv_filename = db.Column(db.String(255), nullable=True)
     order = db.Column(db.Integer, default=0)
+    
     
 class Visitor(db.Model):
     id = db.Column(db.Integer, primary_key=True)

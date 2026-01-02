@@ -3,23 +3,58 @@
 <div class="container mt-5 pt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card border-0 shadow p-4">
-                <h3 class="fw-bold mb-4">{{ title }}</h3>
-                <form method="POST">
+            <div class="card border-0 shadow-lg p-4 rounded-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-primary rounded-circle p-2 me-3">
+                        <i class="bi bi-briefcase text-white"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0">{{ title }}</h3>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Role Title</label>
-                        <input type="text" name="title" class="form-control" value="{{ role.title if role else '' }}" placeholder="e.g. Junior Backend Developer" required>
+                        <input type="text" name="title" class="form-control px-3 py-2" value="{{ role.title if role else '' }}" placeholder="e.g. Backend Developer" required>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Bootstrap Icon Class</label>
-                        <input type="text" name="icon_class" class="form-control" value="{{ role.icon_class if role else 'bi-cpu' }}" placeholder="bi-server, bi-database, etc.">
-                        <small class="text-muted">Find icons at <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a></small>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                            <input type="text" name="icon_class" class="form-control" value="{{ role.icon_class if role else 'bi-cpu' }}">
+                        </div>
+                        <small class="text-muted small">Example: `bi-server`, `bi-code-slash`</small>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Description</label>
-                        <textarea name="description" class="form-control" rows="3" required>{{ role.description if role else '' }}</textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Briefly describe what you are looking for in this role..." required>{{ role.description if role else '' }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Save Role</button>
+
+                    <div class="mb-4 p-3 bg-light rounded-3 border">
+                        <label class="form-label small fw-bold d-block">Specialist CV (PDF)</label>
+                        
+                        {% if role and role.cv_filename %}
+                        <div class="d-flex align-items-center mb-2 text-success small">
+                            <i class="bi bi-check-circle-fill me-2"></i> 
+                            Current: {{ role.cv_filename }}
+                        </div>
+                        {% endif %}
+
+                        <input type="file" name="cv_file" class="form-control form-control-sm" accept=".pdf">
+                        <div class="form-text small">
+                            {% if role and role.cv_filename %}
+                            Upload a new file only if you want to replace the current one.
+                            {% else %}
+                            Upload a CV tailored specifically for this role.
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold">Save Role Profile</button>
+                        <a href="{{ url_for('main.home') }}" class="btn btn-light py-2">Cancel</a>
+                    </div>
                 </form>
             </div>
         </div>

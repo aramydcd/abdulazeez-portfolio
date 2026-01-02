@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+
+<header class="hero-section bg-white py-6">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center mb-4 px-3 py-2 rounded-pill gap-2 shadow-sm" 
+                    style="background-color: #e7f0ff; border: 1px solid #cfe2ff;">
+                    
+                    <span class="d-flex align-items-center justify-content-center" style="width: 12px; height: 12px;">
+                        <span class="status-dot pulse"></span>
+                    </span>
+                    
+                    <span class="small fw-bold" style="color: #0d6efd; letter-spacing: 0.5px;">
+                        {{ current_user.status or 'Open to Internships & Junior Roles' }}
+                    </span>
+                </div>
+
+
+                <h6 class="text-primary fw-bold text-uppercase ls-wide mb-3">Software Engineer</h6>
+                <h1 class="display-3 fw-extrabold mb-4">
+                    Architecting <span class="text-gradient">Backend Systems</span> & Digital Experiences.
+                </h1>
+
+                <p class="lead text-secondary mb-5 opacity-90">
+                    I am <span class="text-dark fw-bold">Abdulazeez Abdulakeem</span>. A Computer Science graduate specialized in building high-performance server-side logic and scalable applications.
+                </p>
+
+
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="#projects" class="btn btn-primary btn-lg px-4 py-3 shadow-lg hover-up">Explore Work</a>
+                    <a href="{{ url_for('static', filename='docs/Abdulazeez_CV.pdf') }}" class="btn btn-outline-dark btn-lg px-4 py-3">Download CV</a>
+                </div>
+            </div>
+
+
+            <div class="col-lg-5">
+                <div class="profile-card-wrapper">
+                    <div class="blob-shape"></div>
+                    <img src="{{ url_for('static', filename='img/' + (current_user.profile_pic or 'profile.jpg')) }}" 
+                         class="img-fluid profile-img-pro shadow-2xl" alt="Abdulazeez">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="py-6 bg-light border-top border-bottom">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="fw-bold">Technical Toolbox</h2>
+            <p class="text-muted">The technologies I use to bring ideas to life</p>
+        </div>
+        <div class="row g-4">
+            {% for skill in skills %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift glass-card">
+                    <div class="card-body p-4 text-center">
+                        <i class="bi {{ skill.icon_class }} text-primary display-5 mb-3 d-block"></i>
+                        <h5 class="fw-bold">{{ skill.category }}</h5>
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                            {% for tool in skill.tools.split(',') %}
+                            <span class="badge-pro">{{ tool.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="projects" class="py-6 bg-white">
+    <div class="container">
+        <div class="section-header mb-5">
+            <h2 class="fw-bold">Featured Projects</h2>
+            <div class="header-line"></div>
+        </div>
+        <div class="row g-4">
+            {% for project in projects[:3] %} 
+            <div class="col-md-4">
+                <div class="project-card-pro h-100 shadow-sm">
+                    <div class="img-zoom-container">
+                        <img src="{{ url_for('static', filename='img/' + project.image_file) }}" class="card-img-top" alt="{{ project.title }}">
+                    </div>
+                    <div class="p-4">
+                        <h5 class="fw-bold">{{ project.title }}</h5>
+                        <p class="text-muted small mb-4">{{ project.description[:100] }}...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('main.project_detail', project_id=project.id) }}" class="link-primary fw-bold text-decoration-none">View Case Study →</a>
+                            <a href="{{ project.github_url }}" class="text-dark"><i class="bi bi-github fs-5"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="experience" class="py-6 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold text-center mb-5">Professional Journey</h2>
+                {% for exp in experiences %}
+                <div class="experience-timeline-item bg-white p-4 mb-4 rounded-4 shadow-sm border-start border-primary border-5">
+                    <span class="text-primary small fw-bold">{{ exp.duration }}</span>
+                    <h4 class="fw-bold mt-1">{{ exp.job_title }}</h4>
+                    <p class="text-muted mb-3">{{ exp.company }}</p>
+                    <button class="btn btn-link p-0 text-primary text-decoration-none fw-bold" data-bs-toggle="modal" data-bs-target="#expModal{{ exp.id }}">Details <i class="bi bi-plus"></i></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-6 bg-dark text-white text-center mx-3 rounded-5 mb-5 shadow-2xl">
+    <div class="container text-center py-4">
+        <h2 class="display-5 fw-bold mb-3">Interested in working together?</h2>
+        <p class="lead mb-4">I’m currently available for full-time opportunities.</p>
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg px-5">Say Hello</a>
+    </div>
+</section>
+
+
+
+{% endblock %}

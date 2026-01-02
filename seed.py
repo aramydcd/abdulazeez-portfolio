@@ -59,7 +59,12 @@ def seed_database():
                 job_title="Software Developer Intern (Backend Focus)",
                 company="4Real Global IT Solution | Innovative ICT Firm",
                 duration="Dec 2024 - Mar 2025",
-                description="""• Financial Systems Optimization: Engineered high-precision logic..."""
+                technologies="VB.NET, Microsoft Visual Studio 2010",
+                description="• Financial Systems Optimization: Engineered high-precision server-side logic using VB.NET, reducing calculation latency by 15% for enterprise-level financial tools.\n"
+                    "• Scalable Architecture: Leveraged Object-Oriented Programming (OOP) to refactor legacy code into modular, reusable components, decreasing technical debt and future maintenance time.\n"
+                    "• SDLC Lifecycle Management: Actively contributed to the full Software Development Life Cycle, implementing rigorous debugging and unit testing protocols that improved system reliability by 20%.\n"
+                    "• Data Integrity & Security: Designed and maintained robust data structures for desktop service environments, ensuring 100% stability across multi-user financial transactions.\n"
+                    "• Cross-Functional Collaboration: Translated complex business requirements into technical specifications, bridging the gap between stakeholder needs and backend implementation.\n"
             )
             db.session.add(e1)
             print("✅ Experience seeded!")

@@ -22,6 +22,11 @@
                                placeholder="e.g. Jan 2024 - April 2024" value="{{ exp.duration if exp else '' }}">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label small fw-bold">Technologies Used (Comma Separated)</label>
+                        <input type="text" name="technologies" class="form-control bg-light border-0" 
+                                value="{{ exp.technologies if exp else '' }}" placeholder="Python, Flask, PostgreSQL, Docker">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label small fw-bold">Key Responsibilities (Use bullets)</label>
                         <textarea name="description" class="form-control bg-light border-0" rows="5" 
                                   placeholder="• Built APIs...&#10;• Optimized database...">{{ exp.description if exp else '' }}</textarea>

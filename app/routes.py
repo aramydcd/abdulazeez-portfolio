@@ -137,7 +137,7 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(current_app.root_path, 'static/img', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'app/static/img', picture_fn)
     
     # Save the file to the file system
     form_picture.save(picture_path)
@@ -258,10 +258,12 @@ def edit_skill(skill_id):
         return redirect(url_for('main.manage_skills'))
     return render_template('skill_form.html', skill=skill, title="Update Skill")
 
+
 @main.route("/manage-experience")
 def manage_experience():
     experiences = Experience.query.order_by(Experience.order.asc()).all()
     return render_template('manage_experience.html', experiences=experiences)
+
 
 @main.route("/experience/new", methods=['GET', 'POST'])
 @login_required
@@ -271,6 +273,7 @@ def new_experience():
             job_title=request.form.get('job_title'),
             company=request.form.get('company'),
             duration=request.form.get('duration'),
+            technologies=request.form.get('technologies'),
             description=request.form.get('description')
         )
         db.session.add(exp)
@@ -304,20 +307,39 @@ def edit_experience(exp_id):
     return render_template('experience_form.html', exp=exp, title="Update Experience")
 
 
+import os
+from werkzeug.utils import secure_filename
+
 @main.route("/role/new", methods=['GET', 'POST'])
 @login_required
 def new_role():
     if request.method == 'POST':
+        # Handle the CV File Upload
+        cv_file = request.files.get('cv_file')
+        cv_filename = None
+        
+        if cv_file and cv_file.filename != '':
+            # Ensure the filename is safe and save it
+            filename = secure_filename(cv_file.filename)
+            # Add a prefix to avoid name collisions (e.g., backend_abdul_cv.pdf)
+            cv_filename = f"{request.form.get('title').replace(' ', '_').lower()}_{filename}"
+            
+            upload_path = os.path.join('app/static/docs/', cv_filename)
+            cv_file.save(upload_path)
+
+        # Create the role with the filename
         role = TargetRole(
             title=request.form.get('title'),
             icon_class=request.form.get('icon_class'),
-            description=request.form.get('description')
+            description=request.form.get('description'),
+            cv_filename=cv_filename  # Save the path to the DB
         )
         db.session.add(role)
         db.session.commit()
+        flash('New role and specialist CV added!', 'success')
         return redirect(url_for('main.home'))
+        
     return render_template('role_form.html', title="Add Target Role")
-
 
 @main.route("/role/edit/<int:role_id>", methods=['GET', 'POST'])
 @login_required
@@ -327,8 +349,28 @@ def edit_role(role_id):
         role.title = request.form.get('title')
         role.icon_class = request.form.get('icon_class')
         role.description = request.form.get('description')
+        
+        # Handle CV Update
+        cv_file = request.files.get('cv_file')
+        if cv_file and cv_file.filename != '':
+            # 1. Delete old file if it exists to save space
+            if role.cv_filename:
+                old_path = os.path.join('app/static/docs/', role.cv_filename)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            
+            # 2. Save the new file
+            filename = secure_filename(cv_file.filename)
+            new_cv_name = f"{role.title.replace(' ', '_').lower()}_{filename}"
+            cv_file.save(os.path.join('app/static/docs/', new_cv_name))
+            
+            # 3. Update database
+            role.cv_filename = new_cv_name
+
         db.session.commit()
+        flash('Role and CV updated successfully!', 'success')
         return redirect(url_for('main.home'))
+        
     return render_template('role_form.html', role=role, title="Edit Role")
 
 
@@ -373,25 +415,30 @@ def update_status():
 #                            total_visits=total_visits, 
 #                            recent_visits=recent_visits)
     
-    
 @main.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     if request.method == 'POST':
         user = current_user
         
-        # Update Username
-        new_username = request.form.get('username')
-        if new_username:
-            user.username = new_username
+        # 1. Identity & Status
+        user.username = request.form.get('username')
+        user.status = request.form.get('status') # This saves your 'Open to...' text
             
-        # Update Password (only if provided)
-        new_password = request.form.get('password')
-        if new_password:
-            user.password = generate_password_hash(new_password)
+        # 2. Password Change
+        new_pass = request.form.get('password')
+        if new_pass and len(new_pass.strip()) > 0:
+            user.password = generate_password_hash(new_pass)
+
+        # 3. Image Upload
+        file = request.files.get('profile_pic')
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            file.save(os.path.join('app/static/img/', filename))
+            user.profile_pic = filename
             
         db.session.commit()
-        flash('Settings updated successfully!')
+        flash('Success! Your profile has been updated.', 'success') # Matches 'alert-success'
         return redirect(url_for('main.settings'))
         
     return render_template('settings.html')
