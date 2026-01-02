@@ -5,9 +5,10 @@ from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(100), default="Available for Internship")
     username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(255), default="Available for Internship")
+    
 
 class Project(db.Model):
     __tablename__ = 'projects'

@@ -2,6 +2,7 @@ from app import create_app, db
 from app.models import User, Project, Skill, Experience, TargetRole
 from werkzeug.security import generate_password_hash
 
+
 app = create_app()
 
 def seed_database():
