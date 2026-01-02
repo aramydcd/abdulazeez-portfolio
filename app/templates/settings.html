@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-cog"></i> Admin Settings</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('main.settings') }}" method="POST" enctype="multipart/form-data">
+                        
+                        <div class="mb-4">
+                            <label for="username" class="form-label font-weight-bold">Admin Username</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="{{ current_user.username }}" required>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-4">
+                            <label class="form-label font-weight-bold">Profile Picture</label>
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ url_for('static', filename='img/' + (current_user.profile_pic or 'profile.jpg')) }}" 
+                                     alt="Current Profile" class="rounded-circle mr-3" 
+                                     style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ddd;">
+                                <div>
+                                    <input type="file" class="form-control-file" id="profile_pic" name="profile_pic" accept="image/*">
+                                    <small class="text-muted d-block mt-1">Recommended: Square image (JPG/PNG)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label font-weight-bold">Change Password</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Leave blank to keep current password">
+                            <small class="text-muted">Only fill this out if you want to update your password.</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('main.home') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-success px-4">Save Changes</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

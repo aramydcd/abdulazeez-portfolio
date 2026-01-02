@@ -1,15 +1,16 @@
+import os
+import secrets
 from flask import Blueprint, render_template, url_for, flash, redirect, request
 from . import db
 from .models import Project, User, Skill, Experience, TargetRole, Visitor
 from .models import Message as MessageModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
-import os
-import secrets
 from werkzeug.utils import secure_filename
 from flask import current_app
 from sqlalchemy import func
 from flask_mail import Message as MailMessage, Mail
+from datetime import datetime, timedelta
 
 
 
@@ -123,7 +124,7 @@ def inbox():
 @main.route("/message/delete/<int:message_id>", methods=['POST'])
 @login_required
 def delete_message(message_id):
-    msg = Message.query.get_or_404(message_id)
+    msg = MessageModel.query.get_or_404(message_id)
     db.session.delete(msg)
     db.session.commit()
     flash('Message deleted.', 'info')
@@ -351,23 +352,46 @@ def update_status():
     return redirect(url_for('main.home'))
 
 
-@main.before_app_request
-def track_visitor():
-    # Only track if it's not the admin or a static file request
-    if not request.path.startswith('/static') and not current_user.is_authenticated:
-        visit = Visitor(ip_address=request.remote_addr)
-        db.session.add(visit)
-        db.session.commit()
+# @main.before_app_request
+# def track_visitor():
+#     # Only track if it's not the admin or a static file request
+#     if not request.path.startswith('/static') and not current_user.is_authenticated:
+#         visit = Visitor(ip_address=request.remote_addr)
+#         db.session.add(visit)
+#         db.session.commit()
         
         
-@main.route("/dashboard")
-@login_required
-def dashboard():
-    # Get total visits
-    total_visits = Visitor.query.count()
-    # Get visits from the last 24 hours
-    recent_visits = Visitor.query.filter(Visitor.visit_time > datetime.utcnow() - timedelta(days=1)).count()
+# @main.route("/dashboard")
+# @login_required
+# def dashboard():
+#     # Get total visits
+#     total_visits = Visitor.query.count()
+#     # Get visits from the last 24 hours
+#     recent_visits = Visitor.query.filter(Visitor.visit_time > datetime.utcnow() - timedelta(days=1)).count()
     
-    return render_template('dashboard.html', 
-                           total_visits=total_visits, 
-                           recent_visits=recent_visits)
+#     return render_template('dashboard.html', 
+#                            total_visits=total_visits, 
+#                            recent_visits=recent_visits)
+    
+    
+@main.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        user = current_user
+        
+        # Update Username
+        new_username = request.form.get('username')
+        if new_username:
+            user.username = new_username
+            
+        # Update Password (only if provided)
+        new_password = request.form.get('password')
+        if new_password:
+            user.password = generate_password_hash(new_password)
+            
+        db.session.commit()
+        flash('Settings updated successfully!')
+        return redirect(url_for('main.settings'))
+        
+    return render_template('settings.html')

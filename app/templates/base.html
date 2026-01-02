@@ -39,14 +39,15 @@
                         href="{{ url_for('main.manage_skills') }}">Skills</a>
                         
                         <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
-
+                        
+                        <a class="nav-link" href="{{ url_for('main.settings') }}">Settings</a>
                     {%else%}
                         <a class="nav-link {{ 'active' if request.endpoint == 'main.projects' }}" 
                         href="{{ url_for('main.projects') }}">Projects</a>
                     {% endif %}
-
                     <a class="nav-link btn btn-outline-primary ms-lg-3 px-4 text-white {{ 'active' if request.endpoint == 'main.contact' }}" 
-                    href="{{ url_for('main.contact') }}">Contact Me</a>
+                    href="{{ url_for('main.contact') }}">Contact Me
+                    </a>
                 </div>
             </div>
         </div>
@@ -140,7 +141,7 @@
 
                 <div class="col-md-4 text-center text-md-end">
                     <p class="small text-secondary mb-0">
-                        Built with <i class="bi bi-heart-fill text-danger small"></i> using <span class="text-white">Python & Flask</span>
+                        Built by <i class="bi bi-heart-fill text-danger small"></i><a href="https://github.com/aramydcd" style="text-decoration:none">Aramyde <span class="text-white">(Code-Dev001)</span></a>
                     </p>
                 </div>
             </div>
