@@ -99,7 +99,7 @@
         </div>
 
         <div class="row g-4">
-            {% for project in projects[:3] %} 
+            {% for project in projects[:3] %}
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm project-card overflow-hidden">
                     <div class="position-relative overflow-hidden" style="height: 220px;">
@@ -118,6 +118,7 @@
                                 {{ project.title }}
                             </a>
                         </h5>
+                        <hr>
                         <div class="mb-3">
                             {% for tech in project.technologies.split(',') %}
                                 <a href="{{ url_for('main.projects', category=tech.strip()) }}" 
@@ -245,7 +246,7 @@
         <div class="row g-4 justify-content-center">
             {% for role in target_roles %}
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border rounded-4 shadow-sm p-4 text-center role-card transition-all hover-lift bg-white">
+                <div class="card h-100 border rounded-4 shadow-sm p-4 text-center role-card transition-all hover-lift bg-light">
                     <div class="icon-box mb-3 mx-auto rounded-circle d-flex align-items-center justify-content-center" 
                          style="width: 60px; height: 60px; background-color: #e7f0ff;">
                         <i class="bi {{ role.icon_class }} text-primary fs-3"></i>

@@ -53,10 +53,30 @@ def logout():
     return redirect(url_for('main.home'))
 
 
+from sqlalchemy import or_
+
 @main.route("/")
 @main.route("/home")
 def home():
-    projects = Project.query.order_by(Project.date_posted.desc()).limit(3).all()
+    # 1. Keywords you want to find in the titles
+    keywords = ['DrugVerify', 'AcadSync', 'EduShield']
+    
+    # 2. Build a filter that looks for ANY of these keywords in the title
+    # We use .ilike() for case-insensitive partial matching
+    filters = [Project.title.ilike(f"%{word}%") for word in keywords]
+    
+    # 3. Query the database using the 'OR' of all those filters
+    featured_projects = Project.query.filter(or_(*filters)).all()
+    
+    # 4. Manual Sort (since titles might be longer, we check if the keyword is IN the title)
+    # This ensures DrugVerify is always first, regardless of its full name
+    projects = []
+    for word in keywords:
+        for p in featured_projects:
+            if word.lower() in p.title.lower():
+                projects.append(p)
+                break # Move to the next keyword once found
+    
     skills = Skill.query.all()
     experiences = Experience.query.order_by(Experience.id.desc()).all() 
     target_roles = TargetRole.query.order_by(TargetRole.order.asc()).all() 
@@ -137,7 +157,7 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(current_app.root_path, 'app/static/img', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'static/img', picture_fn)
     
     # Save the file to the file system
     form_picture.save(picture_path)

@@ -47,6 +47,7 @@
                             {{ project.title }}
                         </a>
                     </h5>
+                    <hr>
                     <div class="mb-2">
                         {% for tech in project.technologies.split(',') %}
                             <a href="{{ url_for('main.projects', category=tech.strip()) }}" 
