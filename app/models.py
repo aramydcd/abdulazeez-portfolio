@@ -16,10 +16,10 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    technologies = db.Column(db.String(200))  # e.g., "Python, Flask, Postgres"
+    technologies = db.Column(db.String(200))
     image_file = db.Column(db.String(100), nullable=False, default='default.jpg')
     github_url = db.Column(db.String(200))
-    live_demo_url = db.Column(db.String(200)) # <--- Added this column
+    live_demo_url = db.Column(db.String(200)) 
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
@@ -37,26 +37,26 @@ class Message(db.Model):
 class Skill(db.Model):
     __tablename__ = 'skills'
     id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String(50), nullable=False) # e.g., Backend
-    description = db.Column(db.String(200))             # e.g., Architecting APIs...
-    tools = db.Column(db.String(200))                   # e.g., Python, Flask, SQL
-    icon_class = db.Column(db.String(50), default='bi-code-slash') # Bootstrap icon name
+    category = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(200))
+    tools = db.Column(db.String(200))
+    icon_class = db.Column(db.String(50), default='bi-code-slash')
     
 class Experience(db.Model):
     __tablename__ = 'experiences'
     id = db.Column(db.Integer, primary_key=True)
-    job_title = db.Column(db.String(100), nullable=False) # e.g., Software Developer Intern
-    company = db.Column(db.String(100), nullable=False)   # e.g., 4Real Global IT Solution
-    duration = db.Column(db.String(50))                  # e.g., Jan 2024 - April 2024
-    technologies = db.Column(db.String(200))  # e.g., "Python, Flask, Postgres"
-    description = db.Column(db.Text)                     # Key responsibilities/achievements
-    order = db.Column(db.Integer, default=0)             # To control display sequence
+    job_title = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(50))
+    technologies = db.Column(db.String(200))
+    description = db.Column(db.Text)
+    order = db.Column(db.Integer, default=0)
     
 class TargetRole(db.Model):
     __tablename__ = 'target_roles'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False) # e.g., Backend Developer
-    icon_class = db.Column(db.String(50), default='bi-cpu') # Bootstrap icon name
+    title = db.Column(db.String(100), nullable=False)
+    icon_class = db.Column(db.String(50), default='bi-cpu')
     description = db.Column(db.Text, nullable=False)
     cv_filename = db.Column(db.String(255), nullable=True)
     order = db.Column(db.Integer, default=0)

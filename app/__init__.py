@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from flask_mail import Mail  
 from dotenv import load_dotenv
 
-# Extensions defined outside the factory
+
 load_dotenv()
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -18,19 +18,29 @@ def create_app():
     # Get the URL
     database_url = os.getenv('DATABASE_URL')
     
+    databaseConnectionSecure = False    
     # Check if it exists and fix the prefix
     if database_url:
         if database_url.startswith("postgres://"):
             database_url = database_url.replace("postgres://", "postgresql://", 1)
-    else:
+
+        # try:
+        #     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        #     databaseConnectionSecure = True
+        # except:
+        #     print("Warning: DATABASE Operational Error, using SQLite fallback.")
+            
+    if not databaseConnectionSecure:
         # Fallback to local SQLite if DATABASE_URL is missing
         # This prevents the "Could not parse" crash
         database_url = 'sqlite:///portfolio.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
         print("Warning: DATABASE_URL not found, using SQLite fallback.")
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        
+    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-123')
+    
     
     
     # Flask-Mail Configuration

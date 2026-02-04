@@ -1,17 +1,17 @@
 import os
 import secrets
+import json
 from flask import Blueprint, render_template, url_for, flash, redirect, request
-from . import db
+from . import db, mail
 from .models import Project, User, Skill, Experience, TargetRole, Visitor
 from .models import Message as MessageModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from flask import current_app
-from sqlalchemy import func
-from flask_mail import Message as MailMessage, Mail
+from sqlalchemy import func, or_
+from flask_mail import Message as MailMessage
 from datetime import datetime, timedelta
-
 
 
 main = Blueprint('main', __name__)
@@ -53,29 +53,19 @@ def logout():
     return redirect(url_for('main.home'))
 
 
-from sqlalchemy import or_
-
 @main.route("/")
 @main.route("/home")
 def home():
-    # 1. Keywords you want to find in the titles
-    keywords = ['DrugVerify', 'AcadSync', 'EduShield']
-    
-    # 2. Build a filter that looks for ANY of these keywords in the title
-    # We use .ilike() for case-insensitive partial matching
+    keywords = ['AcadSync', 'DrugVerify', 'EduShield']
     filters = [Project.title.ilike(f"%{word}%") for word in keywords]
-    
-    # 3. Query the database using the 'OR' of all those filters
     featured_projects = Project.query.filter(or_(*filters)).all()
-    
-    # 4. Manual Sort (since titles might be longer, we check if the keyword is IN the title)
-    # This ensures DrugVerify is always first, regardless of its full name
+
     projects = []
     for word in keywords:
         for p in featured_projects:
             if word.lower() in p.title.lower():
                 projects.append(p)
-                break # Move to the next keyword once found
+                break
     
     skills = Skill.query.all()
     experiences = Experience.query.order_by(Experience.id.desc()).all() 
@@ -96,8 +86,6 @@ def projects():
     return render_template('projects.html', projects=projects, active_category=category)
 
 
-mail = Mail() # Initialize this in your app factory
-
 @main.route("/contact", methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -106,7 +94,7 @@ def contact():
         subject = request.form.get('subject')
         message = request.form.get('message')
 
-        # 1. Save to Database using the Model
+        # Save to Database using the Model
         new_db_msg = MessageModel(
             name=name, 
             email=email, 
@@ -116,7 +104,7 @@ def contact():
         db.session.add(new_db_msg)
         db.session.commit()
 
-        # 2. Send Email using MailMessage
+        # Send Email using MailMessage
         msg = MailMessage(
             subject=f"Portfolio: {subject}",
             sender='abdulakeem606@gmail.com',
@@ -141,6 +129,7 @@ def inbox():
     messages = MessageModel.query.order_by(MessageModel.timestamp.desc()).all()
     return render_template('inbox.html', messages=messages)
 
+
 @main.route("/message/delete/<int:message_id>", methods=['POST'])
 @login_required
 def delete_message(message_id):
@@ -162,6 +151,7 @@ def save_picture(form_picture):
     # Save the file to the file system
     form_picture.save(picture_path)
     return picture_fn
+
 
 @main.route("/project/new", methods=['GET', 'POST'])
 @login_required
@@ -214,7 +204,6 @@ def update_project(project_id):
         db.session.commit()
         flash('Project updated successfully!', 'success')
         return redirect(url_for('main.project_detail', project_id=project.id))
-        
     return render_template('project_form.html', title='Update Project', project=project)
 
 
@@ -228,11 +217,12 @@ def delete_project(project_id):
     flash('Project deleted!', 'info')
     return redirect(url_for('main.home'))
 
+
 @main.route("/project/<int:project_id>")
 def project_detail(project_id):
-    # .get_or_404 is great because it automatically returns a 404 page if the ID is wrong
     project = Project.query.get_or_404(project_id)
     return render_template('project_detail.html', project=project)
+
 
 @main.route("/skill/new", methods=['GET', 'POST'])
 @login_required
@@ -249,11 +239,13 @@ def new_skill():
         return redirect(url_for('main.home'))
     return render_template('skill_form.html')
 
+
 @main.route("/manage-skills")
 @login_required
 def manage_skills():
     skills = Skill.query.all()
     return render_template('manage_skills.html', skills=skills)
+
 
 @main.route("/skill/delete/<int:skill_id>", methods=['POST'])
 @login_required
@@ -263,6 +255,7 @@ def delete_skill(skill_id):
     db.session.commit()
     flash('Skill category removed.', 'info')
     return redirect(url_for('main.manage_skills'))
+
 
 @main.route("/skill/edit/<int:skill_id>", methods=['GET', 'POST'])
 @login_required
@@ -302,6 +295,7 @@ def new_experience():
         return redirect(url_for('main.manage_experience'))
     return render_template('experience_form.html', title="Add Experience")
 
+
 @main.route("/experience/delete/<int:exp_id>", methods=['POST'])
 @login_required
 def delete_experience(exp_id):
@@ -310,6 +304,7 @@ def delete_experience(exp_id):
     db.session.commit()
     flash('Experience record deleted.', 'info')
     return redirect(url_for('main.manage_experience'))
+
 
 @main.route("/experience/edit/<int:exp_id>", methods=['GET', 'POST'])
 @login_required
@@ -327,8 +322,7 @@ def edit_experience(exp_id):
     return render_template('experience_form.html', exp=exp, title="Update Experience")
 
 
-import os
-from werkzeug.utils import secure_filename
+
 
 @main.route("/role/new", methods=['GET', 'POST'])
 @login_required
@@ -357,9 +351,9 @@ def new_role():
         db.session.add(role)
         db.session.commit()
         flash('New role and specialist CV added!', 'success')
-        return redirect(url_for('main.home'))
-        
+        return redirect(url_for('main.home'))       
     return render_template('role_form.html', title="Add Target Role")
+
 
 @main.route("/role/edit/<int:role_id>", methods=['GET', 'POST'])
 @login_required
@@ -373,24 +367,22 @@ def edit_role(role_id):
         # Handle CV Update
         cv_file = request.files.get('cv_file')
         if cv_file and cv_file.filename != '':
-            # 1. Delete old file if it exists to save space
+            # Delete old file if it exists to save space
             if role.cv_filename:
                 old_path = os.path.join('app/static/docs/', role.cv_filename)
                 if os.path.exists(old_path):
                     os.remove(old_path)
             
-            # 2. Save the new file
+            # Save the new file
             filename = secure_filename(cv_file.filename)
             new_cv_name = f"{role.title.replace(' ', '_').lower()}_{filename}"
             cv_file.save(os.path.join('app/static/docs/', new_cv_name))
-            
-            # 3. Update database
+            # Update database
             role.cv_filename = new_cv_name
 
         db.session.commit()
         flash('Role and CV updated successfully!', 'success')
         return redirect(url_for('main.home'))
-        
     return render_template('role_form.html', role=role, title="Edit Role")
 
 
@@ -414,26 +406,49 @@ def update_status():
     return redirect(url_for('main.home'))
 
 
-# @main.before_app_request
-# def track_visitor():
-#     # Only track if it's not the admin or a static file request
-#     if not request.path.startswith('/static') and not current_user.is_authenticated:
-#         visit = Visitor(ip_address=request.remote_addr)
-#         db.session.add(visit)
-#         db.session.commit()
+@main.before_app_request
+def track_visitor():
+    # Only track if it's not the admin or a static file request
+    if not request.path.startswith('/static') and not current_user.is_authenticated:
+        visit = Visitor(ip_address=request.remote_addr)
+        db.session.add(visit)
+        db.session.commit()
         
         
-# @main.route("/dashboard")
-# @login_required
-# def dashboard():
-#     # Get total visits
-#     total_visits = Visitor.query.count()
-#     # Get visits from the last 24 hours
-#     recent_visits = Visitor.query.filter(Visitor.visit_time > datetime.utcnow() - timedelta(days=1)).count()
+@main.route("/dashboard")
+@login_required
+def dashboard():
+    # Get total visits
+    total_visits = Visitor.query.count()
+    # Get visits from the last 24 hours
+    recent_visits = Visitor.query.filter(Visitor.visit_time > datetime.utcnow() - timedelta(days=1)).count()
+    visitors = Visitor.query.order_by(Visitor.visit_time.desc()).all()
     
-#     return render_template('dashboard.html', 
-#                            total_visits=total_visits, 
-#                            recent_visits=recent_visits)
+    # with open("visit_log.json", "w") as f:
+    #     log = {"visit_log":[]}
+    #     f.write(json.dumps(log))
+    
+    # with open("visit_log.json", "r") as f:
+    #     ok = f.read()
+
+    # log = json.loads(ok)
+    # # log_data = log.get("visit_log")
+    # print(type(log))
+
+        
+    visit_log = {}
+    for visitor in visitors:
+        visit_log["ip_address"] = visitor.ip_address
+        visit_log["visit_time"] = visitor.visit_time
+        visit_log["visit_time_"] = f"{visitor.visit_time.hour} : {visitor.visit_time.minute} : {visitor.visit_time.second}"
+        
+
+    return render_template('dashboard.html', 
+                           total_visits=total_visits, 
+                           recent_visits=recent_visits,
+                           visit_log=visit_log,
+                           visitors=visitors)
+    
     
 @main.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -441,16 +456,16 @@ def settings():
     if request.method == 'POST':
         user = current_user
         
-        # 1. Identity & Status
+        # Identity & Status
         user.username = request.form.get('username')
-        user.status = request.form.get('status') # This saves your 'Open to...' text
+        user.status = request.form.get('status')
             
-        # 2. Password Change
+        # Password Change
         new_pass = request.form.get('password')
         if new_pass and len(new_pass.strip()) > 0:
             user.password = generate_password_hash(new_pass)
 
-        # 3. Image Upload
+        # Image Upload
         file = request.files.get('profile_pic')
         if file and file.filename != '':
             filename = secure_filename(file.filename)
@@ -458,7 +473,7 @@ def settings():
             user.profile_pic = filename
             
         db.session.commit()
-        flash('Success! Your profile has been updated.', 'success') # Matches 'alert-success'
+        flash('Success! Your profile has been updated.', 'success')
         return redirect(url_for('main.settings'))
         
     return render_template('settings.html')
