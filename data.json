@@ -1,0 +1,90 @@
+{
+    "metadata":{
+        "projects": [
+            {
+                "title":"Personal Branding Engine & Dynamic CMS",
+                "description":"A high-performance, database-driven portfolio application engineered to showcase technical projects and professional experience. This project serves as a 'Meta-Project', demonstrating the ability to build, deploy, and maintain a live web application with a dynamic backend and automated data persistence.\n\nKEY ENGINEERING CONTRIBUTIONS\n1. Dual-Environment Database Architecture\n• Hybrid Storage: Developed a flexible configuration system that utilizes SQLite for rapid local development and PostgreSQL for scalable production on Render.\n• ORM Layer: Implemented SQLAlchemy to abstract database interactions, allowing for seamless migrations and complex relational queries without writing raw SQL.\n\n2. Dynamic Content Management (CMS)\n• Relational Schema: Architected a relational database to handle one-to-many relationships between projects, technology tags, and user experiences.\n• Template Logic: Used Jinja2 to build reusable components, ensuring that adding a new project to the database automatically updates the UI, the category filters, and the project detail pages without touching the HTML.\n\n3. Frontend Excellence & Responsive UX\n• Bootstrap 5 Integration: Designed a mobile-first UI using Bootstrap 5 grid systems and utility classes for a clean, professional aesthetic.\n• Interactive Components: Leveraged JavaScript for reactive UI elements, such as dynamic project filtering and hover-state overlays.\n\nCORE FUNCTIONALITY\nFeature & Implementation\n\n1. Backend Framework: Flask with Blueprints for organized, modular routing.\n2. Persistence: SQLite (Dev) / PostgreSQL (Prod) via SQLAlchemy ORM.\n3. Styling: Custom CSS3 and Bootstrap 5 for high-fidelity responsive design.\n4. Deployment: CI/CD pipeline integrated with GitHub and Render.\n5. Environment Control: Secure handling of API keys and DB URLs via .env files.\n",
+                "technologies": "Python (Flask), PostgreSQL, SQLite, SQLAlchemy, Bootstrap 5, Jinja2, Render",
+                "github_url": "https://github.com/aramydcd/abdulazeez-portfolio",
+                "live_demo_url":"https://abdulazeez-portfolio.onrender.com/",
+                "image_file": "default.jpg"
+            },
+            {
+                "title":"ElectiSync – Election Analytics & Result Management System (Bincom Test",
+                "description":"ElectiSync is an interactive data management system developed to provide transparent access to regional election results. The project features a robust backend for database migration and a clean, tabbed interface for data visualization and entry. It addresses a core engineering challenge: migrating legacy MySQL datasets into a localized SQLite environment for rapid analysis and reporting.\n\nKEY ENGINEERING CONTRIBUTIONS \n1. Automated Database Migration Pipeline\nI engineered a custom migration script in _init_.py to handle cross-engine database compatibility:\n• Legacy SQL Sanitization: Developed a Regex-powered cleaning engine to strip MySQL-specific headers (e.g., ENGINE, AUTO_INCREMENT) that would otherwise crash an SQLite instance.\n• Streamlined Initialization: Implemented an automated setup process that reads raw SQL dumps and builds a high-integrity .db file in seconds using cursor.executescript.\n\n2. Multi-Level Result Analysis (Relational Logic)\n• Hierarchical Queries: Architected complex SQL joins to aggregate scores from individual Polling Units (PUs) up to the Local Government Area (LGA) level.\n• SQL Injection Prevention: Implemented secure, parameterized queries across the model layer to ensure data security during user-driven data fetching.\n• Dataframe Integration: Leveraged Pandas to bridge the gap between raw SQL results and Streamlit's UI, enabling high-speed table rendering and reactive data charts.\n\n3. Data Persistence & Integrity\n• Dynamic Result Entry: Built a secure 'Store Results' portal using Streamlit Forms, featuring automated ID generation and timestamping.\n• Audit Trail Logic: Developed a verification system to display real-time database activity, allowing administrators to track the most recent five entries for data validation.\n\nCORE FUNCTIONALITY\nFeature & Implementation\n1. Migration Engine: Automated MySQL-to-SQLite conversion via Regex cleaning.\n2. Polling Unit Result Viewer: Individual polling unit tracking with bar chart visualization.\n3. LGA Aggregator: Real-time score summation across multiple regional units.\n4. Secure Submission: Validated form-based entry for new election records.\n5. Audit Log: Real-time display of recent database transactions.",
+                "technologies": "Python, Streamlit, SQLite3, Pandas, Regex (re)",
+                "github_url": "https://github.com/aramydcd/bincom_python_developer_intern_interview",
+                "live_demo_url":"https://bincom-python-developer-intern-assessment.streamlit.app/",
+                "image_file": "default.jpg"
+            },
+            {
+                "title":"ColorSync - Data Intelligence & Algorithmic Solver (Bincom Technical Assessment Suite 🐍)",
+                "description":"Python, Regex (re), SQLite3, Statistics, Collections (Counter), Git",
+                "technologies": "Python, PostgreSQL, Flask-JWT",
+                "github_url": "https://github.com/aramydcd/bincom-preliminary-python-interview",
+                "live_demo_url":"https://app.com",
+                "image_file": "default.jpg"
+            },
+            {
+                "title":"E-commerce Backend",
+                "description":"A RESTful API for a clothing store with JWT authentication.",
+                "technologies": "Python, PostgreSQL, Flask-JWT",
+                "github_url": "https://github.com/aramydcd/abdulazeez-portfolio",
+                "live_demo_url":"https://app.com",
+                "image_file": "default.jpg"
+            }
+            ,{
+                "title":"E-commerce Backend",
+                "description":"A RESTful API for a clothing store with JWT authentication.",
+                "technologies": "Python, PostgreSQL, Flask-JWT",
+                "github_url": "https://github.com/aramydcd/abdulazeez-portfolio",
+                "live_demo_url":"https://app.com",
+                "image_file": "default.jpg"
+            },
+            {
+                "title":"E-commerce Backend",
+                "description":"A RESTful API for a clothing store with JWT authentication.",
+                "technologies": "Python, PostgreSQL, Flask-JWT",
+                "github_url": "https://github.com/aramydcd/abdulazeez-portfolio",
+                "live_demo_url":"https://app.com",
+                "image_file": "default.jpg"
+            }
+            ],
+        "experiences":[
+            {
+                "job_title":"Software Developer Intern (Backend Focus)",
+                "company":"4Real Global IT Solution | Innovative ICT Firm",
+                "duration":"Dec 2024 - Mar 2025",
+                "technologies":"VB.NET, Microsoft Visual Studio 2010",
+                "description":"• Financial Systems Optimization: Engineered high-precision server-side logic using VB.NET, reducing calculation latency by 15% for enterprise-level financial tools.\n• Scalable Architecture: Leveraged Object-Oriented Programming (OOP) to refactor legacy code into modular, reusable components, decreasing technical debt and future maintenance time.\n• SDLC Lifecycle Management: Actively contributed to the full Software Development Life Cycle, implementing rigorous debugging and unit testing protocols that improved system reliability by 20%.\n• Data Integrity & Security: Designed and maintained robust data structures for desktop service environments, ensuring 100% stability across multi-user financial transactions.\n• Cross-Functional Collaboration: Translated complex business requirements into technical specifications, bridging the gap between stakeholder needs and backend implementation.\n"
+
+            }
+        ],
+        "skills":[
+            {
+                "category":"Backend", 
+                "description":"Architecting secure APIs and logic using Python and Flask.", 
+                "tools":"Python, Flask, PostgreSQL", "icon_class":"bi-code-slash"
+            },
+            {
+                "category":"Frontend",
+                "description":"Building responsive, user-first interfaces with modern CSS.",
+                "tools":"HTML5, Bootstrap 5, JavaScript", "icon_class":"bi-layout-sidebar"
+            },
+            {
+                "category":"DevOps/Tools", "description":"Version control, deployment, and environment management.", "tools":"Git, UV, Docker", "icon_class":"bi-terminal"
+            }
+        ],
+        "target_roles":[
+            {
+                "title":"Backend Developer", "icon_class":"bi-server", "description":"Focused on building scalable server-side logic..."
+            },
+            {
+                "title":"Database Administrator", "icon_class":"bi-database-check", "description":"Interests in SQL optimization..."
+            },
+            {
+              "title":"Full-Stack Engineer", "icon_class":"bi-window-stack", "description":"Bridging the gap between backends and frontends..."
+            }
+        ]
+    }
+}

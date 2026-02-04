@@ -1,3 +1,4 @@
+import json
 from app import create_app, db
 from app.models import User, Project, Skill, Experience, TargetRole
 from werkzeug.security import generate_password_hash
@@ -15,72 +16,74 @@ def seed_database():
         admin_exists = User.query.filter_by(username='admin').first()
         if not admin_exists:
             hashed_pw = generate_password_hash('admin123', method='pbkdf2:sha256')
-            admin = User(username='admin', password=hashed_pw, status="Open to Junior Entry Roles")
+            admin = User(username='admin', password=hashed_pw, status="Open to Internships & Junior Entry Roles")
             db.session.add(admin)
             print("✅ Admin user created (User: admin, PW: admin123)")
         else:
             print("ℹ️ Admin user already exists. Skipping...")
 
+
+        with open('datas.json', 'r', encoding='utf-8') as f:
+            loaded_data = json.load(f)
+
+        projects = loaded_data["projects"]
+        experiences = loaded_data["experiences"]
+        skills = loaded_data["skills"]
+        target_roles = loaded_data["target_roles"]
+        
         # 3. Seed Projects (Check by title)
-        project_titles = ["AI Chatbot", "E-commerce Backend"]
+        project_titles = [pro["title"] for pro in projects]
         if not Project.query.filter(Project.title.in_(project_titles)).first():
-            p1 = Project(
-                title="AI Chatbot",
-                description="A real-time chatbot built with Flask and OpenAI API.",
-                technologies="Python, Flask, OpenAI",
-                github_url="https://github.com/aramydcd/chatbot",
-                image_file="default.jpg"
-            )
-            p2 = Project(
-                title="E-commerce Backend",
-                description="A RESTful API for a clothing store with JWT authentication.",
-                technologies="Python, PostgreSQL, Flask-JWT",
-                github_url="https://github.com/aramydcd/shop-api",
-                image_file="default.jpg"
-            )
-            db.session.add_all([p1, p2])
+            for pro in projects:
+                new_project = Project(
+                    title=pro["title"],
+                    description=pro["description"],
+                    technologies= pro["technologies"],
+                    github_url=pro["github_url"],
+                    live_demo_url = pro["live_demo_url"],
+                    image_file=pro["image_file"]
+                )
+                db.session.add(new_project)
             print("✅ Projects seeded!")
         else:
             print("ℹ️ Projects already exist. Skipping...")
 
         # 4. Seed Skills (Check by category)
         if Skill.query.count() == 0:
-            s1 = Skill(category="Backend", description="Architecting secure APIs and logic using Python and Flask.", tools="Python, Flask, PostgreSQL", icon_class="bi-code-slash")
-            s2 = Skill(category="Frontend", description="Building responsive, user-first interfaces with modern CSS.", tools="HTML5, Bootstrap 5, JavaScript", icon_class="bi-layout-sidebar")
-            s3 = Skill(category="DevOps/Tools", description="Version control, deployment, and environment management.", tools="Git, UV, Docker", icon_class="bi-terminal")
-            db.session.add_all([s1, s2, s3])
+            for skill in skills:
+                new_skill = Skill(category=skill["category"], description=skill["description"], tools=skill["tools"], icon_class=skill["icon_class"])
+                db.session.add(new_skill)
             print("✅ Skills seeded!")
         else:
             print("ℹ️ Skills already exist. Skipping...")
 
         # 5. Seed Experience
         if Experience.query.count() == 0:
-            e1 = Experience(
-                job_title="Software Developer Intern (Backend Focus)",
-                company="4Real Global IT Solution | Innovative ICT Firm",
-                duration="Dec 2024 - Mar 2025",
-                technologies="VB.NET, Microsoft Visual Studio 2010",
-                description="• Financial Systems Optimization: Engineered high-precision server-side logic using VB.NET, reducing calculation latency by 15% for enterprise-level financial tools.\n"
-                    "• Scalable Architecture: Leveraged Object-Oriented Programming (OOP) to refactor legacy code into modular, reusable components, decreasing technical debt and future maintenance time.\n"
-                    "• SDLC Lifecycle Management: Actively contributed to the full Software Development Life Cycle, implementing rigorous debugging and unit testing protocols that improved system reliability by 20%.\n"
-                    "• Data Integrity & Security: Designed and maintained robust data structures for desktop service environments, ensuring 100% stability across multi-user financial transactions.\n"
-                    "• Cross-Functional Collaboration: Translated complex business requirements into technical specifications, bridging the gap between stakeholder needs and backend implementation.\n"
-            )
-            db.session.add(e1)
+            for exp in experiences:
+                new_exp = Experience(
+                    job_title=exp["job_title"],
+                    company=exp["company"],
+                    duration=exp["duration"],
+                    technologies=exp["technologies"],
+                    description=exp["description"]
+                )
+                db.session.add(new_exp)
             print("✅ Experience seeded!")
 
         # 6. Seed Target Roles
         if TargetRole.query.count() == 0:
-            roles = [
-                TargetRole(title="Backend Developer", icon_class="bi-server", description="Focused on building scalable server-side logic..."),
-                TargetRole(title="Database Administrator", icon_class="bi-database-check", description="Interests in SQL optimization..."),
-                TargetRole(title="Full-Stack Engineer", icon_class="bi-window-stack", description="Bridging the gap between backends and frontends...")
-            ]
+            roles =[]
+            for role in target_roles:
+                new_role = TargetRole(title=role["title"], icon_class=role["icon_class"], description=role["description"], cv_filename= role.get("cv_filename", ""))
+                
+                roles.append(new_role)
+                    
             db.session.add_all(roles)
             print("✅ Target Roles seeded!")
 
         db.session.commit()
         print("🚀 Seeding process complete!")
+
 
 if __name__ == "__main__":
     seed_database()

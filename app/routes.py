@@ -21,6 +21,19 @@ def page_not_found(e):
     # Note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
+with open('datas.json', 'r', encoding='utf-8') as f:
+            loaded_data = json.load(f)
+
+allCurrentProjects = loaded_data["projects"]
+allCurrentExperiences = loaded_data["experiences"]
+allCurrentSkills = loaded_data["skills"]
+allCurrentTargetRoles = loaded_data["target_roles"]
+all_keys = loaded_data.keys()
+if "messages" not in all_keys:
+    loaded_data["messages"] = []
+
+allCurrentMessage = loaded_data["messages"]
+
 
 @main.app_context_processor
 def inject_last_updated():
@@ -101,13 +114,23 @@ def contact():
             subject=subject, 
             message=message
         )
+        
+        new_json_msg = {
+            "name":name, 
+            "email":email,
+            "subject":subject, 
+            "message":message
+        }
+        
+        allCurrentMessage.append(new_json_msg)
+        loaded_data["messages"] = allCurrentMessage
         db.session.add(new_db_msg)
         db.session.commit()
 
         # Send Email using MailMessage
         msg = MailMessage(
             subject=f"Portfolio: {subject}",
-            sender='abdulakeem606@gmail.com',
+            sender=email,
             recipients=['abdulakeem606@gmail.com']
         )
         msg.body = f"Message from {name} ({email}):\n\n{message}"
@@ -173,6 +196,17 @@ def new_project():
             image_file=image_file
         )
         
+        new_json_pro = {
+            "title":request.form.get('title'),
+            "description":request.form.get('description'),
+            "technologies":request.form.get('technologies'),
+            "github_url":request.form.get('github_url'),
+            "live_demo_url":request.form.get('live_demo_url'),
+            "image_file":image_file
+            }
+        
+        allCurrentProjects.append(new_json_pro)
+        loaded_data["projects"] = allCurrentProjects
         db.session.add(project)
         db.session.commit()
         flash('Project created successfully!', 'success')
